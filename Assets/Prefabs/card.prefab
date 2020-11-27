@@ -286,6 +286,11 @@ MonoBehaviour:
   cardInfo: 
   nameText: {fileID: 6585031298895005586}
   desText: {fileID: 5917615402225681654}
+  choose: 0
+  rightClick:
+    m_PersistentCalls:
+      m_Calls: []
+  cardPrefab: {fileID: 4975580138824878442}
 --- !u!1 &6812237698497551781
 GameObject:
   m_ObjectHideFlags: 0
