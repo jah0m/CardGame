@@ -48,18 +48,11 @@ public class talk : MonoBehaviour
             faceImage.sprite = face2;
     
         }
-
-
-
-
-       
     }
 
     // Update is called once per frame
     void Update()           
     {
-
-      
             if (Input.GetKeyDown(KeyCode.Space))
             {
          
@@ -78,10 +71,7 @@ public class talk : MonoBehaviour
                 chooseLavle2.text = textList[8];
                 button1.SetActive(true);
                 button2.SetActive(true);
-
-
             }
-
         }
     }
    

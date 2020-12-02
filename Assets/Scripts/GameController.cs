@@ -45,6 +45,8 @@ public class GameController : MonoBehaviour
     public bool selectSkill;
 
     public bool isChangePos = false;
+    public bool isAdding = false;
+    GameObject tempCard;
 
     public Dictionary<int, int> tempDeck = new Dictionary<int, int>(); //临时牌库，用于存储当前玩家的牌库
 
@@ -64,6 +66,8 @@ public class GameController : MonoBehaviour
         enemyArea = GameObject.Find("enemyArea").GetComponent<EnemyArea>();
         
         player.Init(playerMaxHp, 0, playerAtk);//初始化玩家攻击力，生命值等
+
+        tempCard = GameObject.Find("tempCard");
         
     }
 
@@ -113,9 +117,19 @@ public class GameController : MonoBehaviour
 
     private void AddCard()
     {
+        foreach(Transform card in tempCard.transform)//将指着的牌缩小为正常大小
+        {
+            card.GetComponent<Card>().Exit();
+        }
+        isAdding = true;
         count += 1;
         cardController.AddCard(0);
-        if (count == times) CancelInvoke();
+        if (count == times)
+        {
+            isAdding = false;
+            CancelInvoke();
+        }
+            
     }
 
     public void SetTips(string info, Color color)

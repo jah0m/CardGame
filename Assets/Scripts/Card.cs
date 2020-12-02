@@ -45,20 +45,21 @@ public class Card : MonoBehaviour, IPointerDownHandler
     /// </summary>
     public void  Enter()
     {
+        if (gameController.isAdding) return; //如果正在抽牌则无法放大
         transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
         if (choose == true) return;
         GameObject.Find("cards").GetComponent<GridLayoutGroup>().enabled = false;
         index = transform.GetSiblingIndex();
         transform.SetParent(tempCard.transform);
-        
-        
     }
 
     public void Exit()
     {
+        if (gameController.isAdding) return;
+        transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+        if (choose == true) return;
         GameObject.Find("cards").GetComponent<GridLayoutGroup>().enabled = true;
         transform.SetParent(cardController.transform);
-        transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
         transform.SetSiblingIndex(index);
     }
 

@@ -24,6 +24,8 @@ public class CardController : MonoBehaviour
 
     public bool canMix; //卡牌融合功能是否开启
 
+    public GameObject deckObj;
+
     Player player;//玩家物体
 
 
@@ -156,6 +158,14 @@ public class CardController : MonoBehaviour
         
     }
 
+    public void ShowDeck()
+    {
+        deckObj.SetActive(true);
+    }
+    public void HideDeck()
+    {
+        deckObj.SetActive(false);
+    }
     
     public void SlowAddCard() //延迟抽牌
     {
