@@ -11,8 +11,8 @@ public class Event : MonoBehaviour
     public TMP_Text textLable;
     public Image faceImage;
     public Text chooseLable1;
-    public Text chooseLavle2;
-    public Text chooseLavle3;
+    public Text chooseLable2;
+    public Text chooseLable3;
     [Header("wenben")]
     public TextAsset textFile1;
     public TextAsset textFile2;
@@ -28,7 +28,9 @@ public class Event : MonoBehaviour
     public CardController cardController;
     public int talkId ;
     List<string> textList = new List<string>();
-    
+    public GameObject Story;
+    public GameObject talkObj;
+
     void Start()
     {
         player = GameObject.Find("player").GetComponent<Player>();
@@ -44,30 +46,35 @@ public class Event : MonoBehaviour
         talkId = TalkId;
         if (talkId == 1)
         {
-            GetTxetFormFile(textFile1);
+           
+            GetTxetFormFile();
             faceImage.sprite = face1;
-         }
+        
+        }
         if (talkId == 2)
         {
-            GetTxetFormFile(textFile2);
-            faceImage.sprite = face1;
+          
+            GetTxetFormFile();
+            faceImage.sprite = face3;
          }
         if (talkId == 3)
         {
-            GetTxetFormFile(textFile3);
+            GetTxetFormFile();
             faceImage.sprite = face3;
         }
 
     }
 
     // Update is called once per frame
-    void Update()           
+    void Update()
     {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
+        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
          
+
             if (index < 6)
-            {
+            {   
                 textLable.text += textList[index];
                 textLable.text += textList[index+1];
                 index++;
@@ -78,103 +85,99 @@ public class Event : MonoBehaviour
             {
                 chooseLable1.text = textList[6];
                 button1.SetActive(true);
-                chooseLavle2.text = textList[8];
+                chooseLable2.text = textList[8];
                 button2.SetActive(true);
-                chooseLavle3.text = textList[10];
-                 button3.SetActive(true);
-         
-                
+                chooseLable3.text = textList[10];
+                button3.SetActive(true);
             }
         }
     }
     
 
-    void GetTxetFormFile(TextAsset file) //读取文本逐行播放
+    void GetTxetFormFile() //读取文本逐行播放
     {
         textList.Clear();
         index = 0;
-        var lineDate = file.text.Split('\n');
-        foreach (var line in lineDate)
-        {   
-            textList.Add(line);
+        csvController.GetInstance().loadFile(Application.dataPath + "/res", "游戏剧情.csv");
+        
+        //根据索引读取csvController中的list（csv文件的内容）数据
+        for (int i =1;i<=6  ;i++)
+        {
+            textList.Add(csvController.GetInstance().getString(i, talkId-1));
             textList.Add("\n");
         }
+        
     }
-    
+
     public void choose(int Id)
     {
+        chooseLable1.text = "";
+        chooseLable2.text = "";
+        chooseLable3.text = "";
+        textLable.text = "";
         if (talkId == 0)
         {
-            
+
         }
-        if (talkId == 1)
-        {   if(Id ==1)
+        else if (talkId == 1)
+        {
+            if (Id == 1)
             {
                 player.skillId = 1;
                 player.skillText.text = "内力疗伤";
-                gameController.selectSkill = true;
-                this.chooseLable1.text = "";
-                this.textLable.text = "";
-                Init(2);
-               
-
             }
-            if(Id ==2 )
+            if (Id == 2)
             {
                 player.skillId = 2;
                 player.skillText.text = "嗜血";
                 player.blood = true;
-                gameController.selectSkill = true;
-                this.chooseLable1.text = "";
-                this.textLable.text = "";
-                Init(2);
-
             }
-            if(Id == 3 )
+            if (Id == 3)
             {
                 player.skillId = 3;
                 player.skillText.text = "生命透支";
-                gameController.selectSkill = true;
-                this.chooseLable1.text = "";
-                this.textLable.text = "";
-                Init(2);
-
             }
-            if (talkId == 2)
-            {
-                if (Id == 1)
-                {
-                    cardController.deck.Add(1, 6); //15张普通剑法
-                    cardController.deck.Add(2, 1); //5张回春丹
-                    cardController.deck.Add(3, 1); //3张无中生有
-                    cardController.deck.Add(4, 2); //5张逍遥步
-                    gameObject.SetActive(false);
-                    gameController.StartGame();//游戏开始
+            button1.SetActive(false);
+            button2.SetActive(false);
+            button3.SetActive(false);
+            Init(2);
 
-                }
-                if (Id == 2)
-                {
-                    cardController.deck.Add(1, 6); //15张普通剑法
-                    cardController.deck.Add(2, 1); //5张回春丹
-                    cardController.deck.Add(3, 1); //3张无中生有
-                    cardController.deck.Add(4, 2); //5张逍遥步
-                    gameObject.SetActive(false);
-                    gameController.StartGame();//游戏开始
-                }
-                if (Id == 3)
-                {
-                    cardController.deck.Add(1, 6); //15张普通剑法
-                    cardController.deck.Add(2, 1); //5张回春丹
-                    cardController.deck.Add(3, 1); //3张无中生有
-                    cardController.deck.Add(4, 2); //5张逍遥步
-                    gameObject.SetActive(false);
-                    gameController.StartGame();//游戏开始
-                }
 
-            }
         }
-       
-        
+        else if (talkId == 2)
+        {
+            if (Id == 1)
+            {
+                cardController.deck.Add(1, 6); //15张普通剑法
+                cardController.deck.Add(2, 1); //5张回春丹
+                cardController.deck.Add(3, 1); //3张无中生有
+                cardController.deck.Add(4, 2); //5张逍遥步
+                gameObject.SetActive(false);
+                gameController.StartGame();//游戏开始
+
+
+            }
+            if (Id == 2)
+            {
+                cardController.deck.Add(1, 6); //15张普通剑法
+                cardController.deck.Add(2, 1); //5张回春丹
+                cardController.deck.Add(3, 1); //3张无中生有
+                cardController.deck.Add(4, 2); //5张逍遥步
+                gameObject.SetActive(false);
+                gameController.StartGame();//游戏开始
+            }
+            if (Id == 3)
+            {
+                cardController.deck.Add(1, 6); //15张普通剑法
+                cardController.deck.Add(2, 1); //5张回春丹
+                cardController.deck.Add(3, 1); //3张无中生有
+                cardController.deck.Add(4, 2); //5张逍遥步
+                gameObject.SetActive(false);
+                gameController.StartGame();//游戏开始
+            }
+
+
+        }
     }
 
    

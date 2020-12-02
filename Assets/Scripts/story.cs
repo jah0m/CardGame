@@ -16,7 +16,7 @@ public class story : MonoBehaviour
     public int index;
     public GameObject Story;
     public GameObject talkObj;
-    public TextAsset guitext;
+  
     Event talk;
 
 
@@ -44,10 +44,11 @@ public class story : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space) && index == textList.Count)
             {
 
+           
+                Story.SetActive(false);
                 talkObj.SetActive(true);
                 talk.Init(1);
-                Story.SetActive(false);
-                
+
             }
         }
     }

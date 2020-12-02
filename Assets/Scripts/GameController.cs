@@ -73,7 +73,10 @@ public class GameController : MonoBehaviour
 
     public void StartGame()
     {
+       
         设定关卡(关卡);
+        selectSkill = true;
+
     }
     /// <summary>
     /// 玩家回合开始

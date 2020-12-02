@@ -1344,7 +1344,6 @@ MonoBehaviour:
   index: 0
   Story: {fileID: 417964307}
   talkObj: {fileID: 1301130612}
-  guitext: {fileID: 0}
 --- !u!114 &417964310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4284,20 +4283,22 @@ MonoBehaviour:
   textLable: {fileID: 934988288}
   faceImage: {fileID: 573683409}
   chooseLable1: {fileID: 1736746205}
-  chooseLavle2: {fileID: 491496892}
-  chooseLavle3: {fileID: 1423234794}
+  chooseLable2: {fileID: 491496892}
+  chooseLable3: {fileID: 1423234794}
   textFile1: {fileID: 4900000, guid: 3e63434e8fd0a2d4aa8bb57f5516957b, type: 3}
   textFile2: {fileID: 4900000, guid: d4a80cffb463d5648abc3bfcda250064, type: 3}
   textFile3: {fileID: 4900000, guid: 3e63434e8fd0a2d4aa8bb57f5516957b, type: 3}
   index: 0
   face1: {fileID: 21300000, guid: f5e4d84cafcfcbd41bfc20a14c59f5db, type: 3}
   face2: {fileID: 21300000, guid: 870153535cdd9d442b8f39ffb36e2194, type: 3}
-  face3: {fileID: 0}
+  face3: {fileID: 21300000, guid: 870153535cdd9d442b8f39ffb36e2194, type: 3}
   button1: {fileID: 403450690}
   button2: {fileID: 1409761989}
   button3: {fileID: 46850682}
   cardController: {fileID: 238472807}
   talkId: 0
+  Story: {fileID: 417964307}
+  talkObj: {fileID: 1301130612}
 --- !u!114 &1301130615
 MonoBehaviour:
   m_ObjectHideFlags: 0
