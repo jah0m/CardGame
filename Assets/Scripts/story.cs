@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-public class jq : MonoBehaviour
+using System.IO;
+public class story : MonoBehaviour
 {
 
 
@@ -13,21 +14,27 @@ public class jq : MonoBehaviour
     [Header("wenben")]
     public TextAsset textFile;
     public int index;
-    public GameObject chooseskill;
-    public GameObject jwq;
+    public GameObject Story;
+    public GameObject talkObj;
+    public TextAsset guitext;
+    Event talk;
+
+
 
 
     List<string> textList = new List<string>();
 
     void Start()
     {
+        talk = talkObj.GetComponent<Event>();
         GetTxetFormFile(textFile);
-        index = 0;
+
+
     }
 
     // Update is called once per frame
     void Update()
-    {   if(index<20)
+    {   if(index<=20)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -36,21 +43,19 @@ public class jq : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.Space) && index == textList.Count)
             {
-                chooseskill.SetActive(true);
-                jwq.SetActive(false);
+
+                talkObj.SetActive(true);
+                talk.Init(1);
+                Story.SetActive(false);
+                
             }
         }
-    
     }
-
-
-
     void GetTxetFormFile(TextAsset file)
     {
         textList.Clear();
         index = 0;
         var lineDate = file.text.Split('\n');
-
 
         foreach (var line in lineDate)
         {
@@ -58,8 +63,19 @@ public class jq : MonoBehaviour
 
         }
 
+
     }
 
+
+
+
+
+
+
+
 }
+
+
+
 
 

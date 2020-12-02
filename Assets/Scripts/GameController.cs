@@ -203,12 +203,6 @@ public class GameController : MonoBehaviour
         SetTips("第1关", new Color(0, 55, 255));
         bg.GetComponent<Image>().sprite = Resources.Load("background/bg_1", typeof(Sprite)) as Sprite;
     
-
-        cardController.deck.Add(1, 6); //15张普通剑法
-        cardController.deck.Add(2, 1); //5张回春丹
-        cardController.deck.Add(3, 1); //3张无中生有
-        cardController.deck.Add(4, 2); //5张逍遥步
-
         tempDeck =  new Dictionary<int, int> (cardController.deck);//将当前的牌库保存到临时牌库
 
         team.AddDog("tm2", "队友2", 50, 8, new Color(255, 255, 255));
