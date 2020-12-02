@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
-public class Card : MonoBehaviour
+public class Card : MonoBehaviour, IPointerDownHandler
 {
     private Vector3 pos;
     /// <summary>
@@ -32,23 +34,39 @@ public class Card : MonoBehaviour
 
     GameController gameController;
     private CardController cardController;
+    private GameObject tempCard;
+
+    private int index;
+
+    public UnityEvent rightClick;//右击事件
 
     /// <summary>
     /// 卡牌基础控制
     /// </summary>
     public void  Enter()
     {
+        if (gameController.isAdding) return; //如果正在抽牌则无法放大
         transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
+        if (choose == true) return;
+        GameObject.Find("cards").GetComponent<GridLayoutGroup>().enabled = false;
+        index = transform.GetSiblingIndex();
+        transform.SetParent(tempCard.transform);
     }
 
     public void Exit()
     {
+        if (gameController.isAdding) return;
         transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+        if (choose == true) return;
+        GameObject.Find("cards").GetComponent<GridLayoutGroup>().enabled = true;
+        transform.SetParent(cardController.transform);
+        transform.SetSiblingIndex(index);
     }
 
     public void Drag()
     {
         if (choose == true) return;
+        GameObject.Find("cards").GetComponent<GridLayoutGroup>().enabled = true;
         transform.position = Input.mousePosition;
         transform.SetParent(GameObject.Find("tempCard").transform);
 
@@ -57,6 +75,7 @@ public class Card : MonoBehaviour
     public void Up()
     {
         if (choose == true) return;
+        GameObject.Find("cards").GetComponent<GridLayoutGroup>().enabled = true;
         Vector3 pos = transform.position;
         float pos_y = pos.y;
         float pos_x = pos.x;
@@ -80,7 +99,9 @@ public class Card : MonoBehaviour
     }
 
     
-    
+
+
+
     /// <summary>
     /// 游戏开始时
     /// </summary>
@@ -94,12 +115,23 @@ public class Card : MonoBehaviour
         cardController = GameObject.Find("cards").GetComponent<CardController>();
 
         gameController = GameObject.Find("gameController").GetComponent<GameController>();
-
+        rightClick.AddListener(new UnityAction(ButtonRightClick));//添加右击监听
 
         transform.GetComponent<Image>().color = new Color(255, 255, 255);
-        
+        tempCard = GameObject.Find("tempCard");
     }
-    
+
+    public void OnPointerDown(PointerEventData eventData)//当鼠标被按下时
+    {
+        if (eventData.button == PointerEventData.InputButton.Right)//监听右键
+            rightClick.Invoke();
+    }
+    private void ButtonRightClick() //右击后触发的方法
+    {
+        Exit();
+        cardController.MixCard(id);
+    }
+
     public void Init(int Id)
     {
         id = Id;
@@ -532,4 +564,6 @@ public class Card : MonoBehaviour
         gameController.SetTips("噬魂剑法", new Color(255, 0, 0));
         Destroy(gameObject);
     }
+
+    
 }

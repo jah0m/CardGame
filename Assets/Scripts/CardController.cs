@@ -24,6 +24,8 @@ public class CardController : MonoBehaviour
 
     public bool canMix; //卡牌融合功能是否开启
 
+    public GameObject deckObj;
+
     Player player;//玩家物体
 
 
@@ -127,32 +129,43 @@ public class CardController : MonoBehaviour
         }
     }
 
-    public void MixCard()//卡牌融合
+    public void MixCard(int CardId)//卡牌融合
     {
         CheckHandCards();
         if (canMix == false) return;
-        if (handCardsCount["普通剑法"] >= 3)
+        if(CardId == 1) //如果CardId为1则判断合成普通剑法
         {
-            int count = 0;
-            if (isMixing == true) return;
-            isMixing = true;
-            foreach (Transform x in transform)
+            if (handCardsCount["普通剑法"] >= 3)
             {
-                if(x.GetComponent<Card>().id == 1)
+                int count = 0;
+                if (isMixing == true) return;
+                isMixing = true;
+                foreach (Transform x in transform)
                 {
-                    //x.GetComponent<Image>().color = Color.blue;
-                    x.GetComponent<Card>().desText.text = "融合中";
-                    Destroy(x.gameObject, 0.6f);
-                    count += 1;
+                    if (x.GetComponent<Card>().id == 1)
+                    {
+                        //x.GetComponent<Image>().color = Color.blue;
+                        x.GetComponent<Card>().desText.text = "融合中";
+                        Destroy(x.gameObject, 0.6f);
+                        count += 1;
+                    }
+                    if (count == 3) break;
                 }
-                if (count == 3) break;
+                Invoke("AddCard101", 0.8f);//旋风斩
             }
-            Invoke("AddCard101",0.8f);//旋风斩
-            
         }
+        
         
     }
 
+    public void ShowDeck()
+    {
+        deckObj.SetActive(true);
+    }
+    public void HideDeck()
+    {
+        deckObj.SetActive(false);
+    }
     
     public void SlowAddCard() //延迟抽牌
     {
