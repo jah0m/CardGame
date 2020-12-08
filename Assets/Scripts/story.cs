@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.IO;
-public class story : MonoBehaviour
+public class Story : MonoBehaviour
 {
 
 
@@ -14,7 +14,6 @@ public class story : MonoBehaviour
     [Header("wenben")]
     public TextAsset textFile;
     public int index;
-    public GameObject Story;
     public GameObject talkObj;
   
     Event talk;
@@ -28,8 +27,6 @@ public class story : MonoBehaviour
     {
         talk = talkObj.GetComponent<Event>();
         GetTxetFormFile(textFile);
-
-
     }
 
     // Update is called once per frame
@@ -43,12 +40,9 @@ public class story : MonoBehaviour
             }
             if ( Input.GetMouseButtonUp(0) && index == textList.Count)
             {
-
-           
-                Story.SetActive(false);
+                gameObject.SetActive(false);
                 talkObj.SetActive(true);
                 talk.Init(1);
-
             }
         }
     }
@@ -62,14 +56,6 @@ public class story : MonoBehaviour
             textList.Add(line);
         }
     }
-
-
-
-
-
-
-
-
 }
 
 

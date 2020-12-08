@@ -1127,6 +1127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardPrefab: {fileID: 4975580138824878442, guid: ca9d2fcb0312a204b8f9abcdef088787,
     type: 3}
+  cardCount: 0
   isMixing: 0
   deckCount: 0
   deckCountText: {fileID: 48165956}
@@ -1637,7 +1638,7 @@ MonoBehaviour:
   pointPrefab: {fileID: 6840886797219432148, guid: fae19c5c27802e64c8d179bece007bb4,
     type: 3}
   pointCount: 0
-  ply: {fileID: 0}
+  ply: {fileID: 1205155183}
   playerIn: 0
 --- !u!1 &382301902
 GameObject:
