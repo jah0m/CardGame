@@ -53,8 +53,8 @@ public class GameController : MonoBehaviour
     void Start()
     {
         selectSkill = false;
-        playerAtk = 10;
-        playerMaxHp = 100;
+        playerAtk = 3;
+        playerMaxHp = 10;
         playerMaxMp = 3;
         playerMpReply = playerMaxMp;
 

@@ -46,6 +46,7 @@ public class Player : MonoBehaviour
 
     public float 减伤;
     Team team;
+    public bool 庸医 = false;
 
 
     void Start()
@@ -213,6 +214,14 @@ public class Player : MonoBehaviour
                 buffs["魔功护体"] = Round;
             }
         }
+        if(Id == 206 )
+        {
+
+            if (!buffs.ContainsKey("庸医"))
+            {
+                buffs.Add("庸医", Round);
+            }
+        }
         CheckBuff();
     }
 
@@ -255,6 +264,12 @@ public class Player : MonoBehaviour
                     减伤 = 1f;
                     buffsIcon.AddBuff(5, 1);
                 }
+                else if (buffs.ElementAt(i).Key == "庸医")
+                {
+
+                    庸医 = true;
+                    buffsIcon.AddBuff(206, 1);
+                }
             }
             else if (buffs[buffs.ElementAt(i).Key] == 0)//如果剩余回合为0则取消buff效果并移除buff
             {
@@ -279,6 +294,10 @@ public class Player : MonoBehaviour
                 else if (buffs.ElementAt(i).Key == "魔功护体")
                 {
                     减伤 = 0;
+                }
+                else if (buffs.ElementAt(i).Key == "庸医")
+                {
+                    庸医 = false;
                 }
                 rm.Add(i);
                 
@@ -353,8 +372,8 @@ public class Player : MonoBehaviour
     {
         if (skillId == 1)
         {
-            SetHp(mp / 2);
-            SetMp(-mp);
+            SetHp(2);
+           
         }
         if (skillId == 2)
         {

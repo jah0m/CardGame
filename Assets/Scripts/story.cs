@@ -36,12 +36,12 @@ public class story : MonoBehaviour
     void Update()
     {   if(index<=20)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetMouseButtonUp(0))
             {
                 textLable.text = textList[index];
                 index++;
             }
-            if (Input.GetKeyDown(KeyCode.Space) && index == textList.Count)
+            if ( Input.GetMouseButtonUp(0) && index == textList.Count)
             {
 
            
@@ -57,14 +57,10 @@ public class story : MonoBehaviour
         textList.Clear();
         index = 0;
         var lineDate = file.text.Split('\n');
-
         foreach (var line in lineDate)
         {
             textList.Add(line);
-
         }
-
-
     }
 
 

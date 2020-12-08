@@ -35,6 +35,10 @@ public class Buffs : MonoBehaviour
         {
             buff.transform.GetChild(0).GetComponent<Text>().text = "晕";
         }
+        else if(Id == 206)
+        {
+            buff.transform.GetChild(0).GetComponent<Text>().text = "庸";
+        }
         if (Type == 1) buff.transform.localScale = new Vector3(1f, 1f, 1f);
         if (Type == 2) buff.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
     }
