@@ -138,13 +138,13 @@ public class Card : MonoBehaviour, IPointerDownHandler
    
         if (id == 1)
         {
-            cardName = "普通剑法";
+            cardName = "江湖剑法";
             cardInfo = "对敌人造成(攻击力)伤害";
         }
         else if (id == 2)
         {
             cardName = "回春丹";
-            cardInfo = "回复20生命值";
+            cardInfo = "回复生命值";
         }
         else if (id == 3)
         {
@@ -221,6 +221,11 @@ public class Card : MonoBehaviour, IPointerDownHandler
             cardName = "噬魂剑法";
             cardInfo = "对敌人造成(攻击力)伤害，回复10内力";
         }
+        else if (id ==206)
+        {
+            cardName = "庸医";
+            cardInfo = "当前回合治疗效果变为伤害";
+        }
         nameText.text = cardName;
         desText.text = cardInfo;
     }
@@ -236,7 +241,7 @@ public class Card : MonoBehaviour, IPointerDownHandler
             BackToHand();
             return;
         }
-        if (id == 1) 普通剑法();
+        if (id == 1) 江湖剑法();
         if (id == 2) 回春丹();
         if (id == 3) 无中生有();
         if (id == 4) 逍遥步();
@@ -253,6 +258,7 @@ public class Card : MonoBehaviour, IPointerDownHandler
         if (id == 203) 魔教剑法();
         if (id == 204) 魔功护体();
         if (id == 205) 噬魂剑法();
+        if (id == 206) 庸医();
 
 
         if (id == 101) 旋风斩();
@@ -271,13 +277,22 @@ public class Card : MonoBehaviour, IPointerDownHandler
         }
         player.SetMp(-1);
         gameController.SetTips("回春丹", new Color(0, 255, 0));
-        player.SetHp(20);
+        if (player.庸医)
+        {
+            damage = player.atk;
+            enemyArea.Hurt(damage);
+        }
+        else
+        {
+            player.SetHp(player.atk);
+        }
+        
         //cardController.SlowAddCard();
         
         Destroy(gameObject);
     }
 
-    public void 普通剑法()//普通剑法
+    public void 江湖剑法()//普通剑法
     {
         //   if (gameController.playerIsAtk == true)
         //{
@@ -301,6 +316,12 @@ public class Card : MonoBehaviour, IPointerDownHandler
             player.SetHp((int)(player.atk * 0.3));//吸血效果
         }
         gameController.SetTips("普通剑法", new Color(255, 0, 0));
+        Destroy(gameObject);
+    }
+    public void 庸医()
+    {
+        player.SetBuff(206,1);
+        gameController.SetTips("庸医", new Color(0, 255, 0));
         Destroy(gameObject);
     }
     
