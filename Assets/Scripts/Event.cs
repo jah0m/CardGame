@@ -31,7 +31,10 @@ public class Event : MonoBehaviour
     public GameObject Story;
     public GameObject talkObj;
     public GameObject diologueObj;
+    public GameObject image;
     Diologue diologue;
+    Animator anim;
+    bool opening = true;
 
     void Start()
     {
@@ -40,43 +43,29 @@ public class Event : MonoBehaviour
         gameController = GameObject.Find("gameController").GetComponent<GameController>();
         diologue = diologueObj.GetComponent<Diologue>();
         index = 0;
-       
+      
+
 
 
 
     }
     public void Init(int TalkId)
     {
+        opening = true;
         talkId = TalkId;
         GetTxetFormFile();
-        if (talkId == 1)
-        {
-            faceImage.sprite = face1;
-
-        }
-        if (talkId == 2)
-        {
-            faceImage.sprite = face3;
-        }
-        if (talkId == 3)
-        {
-            faceImage.sprite = face3;
-        }
-        if(talkId ==4)
-        {
-            faceImage.sprite = face3;
-        }
-
+        Invoke("ShowImage", 1.5f);
+        anim = GetComponent<Animator>();
+        anim.SetTrigger("1");
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
         if (Input.GetMouseButtonUp(0))
         {
-
-
+            if (opening) return;
             if (index < 6)
             {
                 textLable.text += textList[index];
@@ -100,7 +89,27 @@ public class Event : MonoBehaviour
         }
     }
 
+    void ShowImage()
+    {
+        image.SetActive(true); 
+        if (talkId == 1)
+        {
+            faceImage.sprite = face1;
+        }
+        if (talkId == 2)
+        {
+            faceImage.sprite = face3;
+        }
+        if (talkId == 3)
+        {
+            faceImage.sprite = face3;
+        }
+        if (talkId == 4)
+        {
+            faceImage.sprite = face3;
+        }
 
+    }
     void GetTxetFormFile() //读取文本逐行播放
     {
         textList.Clear();
@@ -113,6 +122,10 @@ public class Event : MonoBehaviour
             textList.Add("\n");
         }
 
+    }
+    void open()
+    {
+        opening = false;
     }
 
     public void Choose(int Id)
@@ -147,6 +160,7 @@ public class Event : MonoBehaviour
             button1.SetActive(false);
             button2.SetActive(false);
             button3.SetActive(false);
+            image.SetActive(false);
             Init(2);
 
 
@@ -168,6 +182,7 @@ public class Event : MonoBehaviour
             button1.SetActive(false);
             button2.SetActive(false);
             button3.SetActive(false);
+            image.SetActive(false);
             Init(3);
 
         }
@@ -185,6 +200,7 @@ public class Event : MonoBehaviour
             button1.SetActive(false);
             button2.SetActive(false);
             button3.SetActive(false);
+            image.SetActive(false);
             Init(4);
         }
         else if (talkId == 4)
@@ -207,6 +223,7 @@ public class Event : MonoBehaviour
             gameObject.SetActive(false);
             gameController.StartGame();//游戏开始
         }
+        
 
 
     }
