@@ -7,7 +7,7 @@ using System.Linq;
 public class CardController : MonoBehaviour
 {
     public GameObject cardPrefab;//卡牌预制体
-    private int cardCount;//手牌数
+    public int cardCount;//手牌数
     
     private int id; //卡牌id
 

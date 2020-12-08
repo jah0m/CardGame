@@ -43,11 +43,6 @@ public class Event : MonoBehaviour
         gameController = GameObject.Find("gameController").GetComponent<GameController>();
         diologue = diologueObj.GetComponent<Diologue>();
         index = 0;
-      
-
-
-
-
     }
     public void Init(int TalkId)
     {
@@ -73,7 +68,6 @@ public class Event : MonoBehaviour
                 index++;
                 index++;
             }
-
             if (index == 6)
             {
                 chooseLable1.text = textList[6];
@@ -118,10 +112,9 @@ public class Event : MonoBehaviour
         //根据索引读取csvController中的list（csv文件的内容）数据
         for (int i = 1; i <= 6; i++)
         {
-            textList.Add(csvController.GetInstance().getString(i, talkId - 1));
+            textList.Add(csvController.GetInstance().getString(talkId, i));
             textList.Add("\n");
         }
-
     }
     void open()
     {
@@ -135,11 +128,7 @@ public class Event : MonoBehaviour
         chooseLable3.text = "";
         textLable.text = "";
         //diologue.Choose(Id, talkId);
-        if (talkId == 0)
-        {
-
-        }
-        else if (talkId == 1)
+        if (talkId == 1)
         {
             if (Id == 1)
             {
