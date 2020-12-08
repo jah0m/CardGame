@@ -40,10 +40,6 @@ public class Event : MonoBehaviour
         gameController = GameObject.Find("gameController").GetComponent<GameController>();
         diologue = diologueObj.GetComponent<Diologue>();
         index = 0;
-       
-
-
-
     }
     public void Init(int TalkId)
     {
@@ -52,7 +48,6 @@ public class Event : MonoBehaviour
         if (talkId == 1)
         {
             faceImage.sprite = face1;
-
         }
         if (talkId == 2)
         {
@@ -72,11 +67,8 @@ public class Event : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (Input.GetMouseButtonUp(0))
         {
-
-
             if (index < 6)
             {
                 textLable.text += textList[index];
@@ -84,7 +76,6 @@ public class Event : MonoBehaviour
                 index++;
                 index++;
             }
-
             if (index == 6)
             {
                 chooseLable1.text = textList[6];
@@ -109,10 +100,9 @@ public class Event : MonoBehaviour
         //根据索引读取csvController中的list（csv文件的内容）数据
         for (int i = 1; i <= 6; i++)
         {
-            textList.Add(csvController.GetInstance().getString(i, talkId - 1));
+            textList.Add(csvController.GetInstance().getString(talkId, i));
             textList.Add("\n");
         }
-
     }
 
     public void Choose(int Id)
@@ -122,11 +112,7 @@ public class Event : MonoBehaviour
         chooseLable3.text = "";
         textLable.text = "";
         //diologue.Choose(Id, talkId);
-        if (talkId == 0)
-        {
-
-        }
-        else if (talkId == 1)
+        if (talkId == 1)
         {
             if (Id == 1)
             {

@@ -66,6 +66,7 @@ public class Card : MonoBehaviour, IPointerDownHandler
     public void Drag()
     {
         if (choose == true) return;
+        index = cardController.cardCount;
         GameObject.Find("cards").GetComponent<GridLayoutGroup>().enabled = true;
         transform.position = Input.mousePosition;
         transform.SetParent(GameObject.Find("tempCard").transform);
@@ -83,7 +84,7 @@ public class Card : MonoBehaviour, IPointerDownHandler
         {
             Destroy(gameObject);
         }
-        if (pos_y > 320)
+        if (pos_y > 260)
         {
             UseCard();
         }else
@@ -131,100 +132,21 @@ public class Card : MonoBehaviour, IPointerDownHandler
         Exit();
         cardController.MixCard(id);
     }
-
-    public void Init(int Id)
+    
+    public void Init(int Id)//读取卡牌文本
     {
         id = Id;
-   
-        if (id == 1)
-        {
-            cardName = "江湖剑法";
-            cardInfo = "对敌人造成(攻击力)伤害";
-        }
-        else if (id == 2)
-        {
-            cardName = "回春丹";
-            cardInfo = "回复生命值";
-        }
-        else if (id == 3)
-        {
-            cardName = "无中生有";
-            cardInfo = "抽两张牌";
-        }
-        else if (id == 4)
-        {
-            cardName = "逍遥步";
-            cardInfo = "获得buff逍遥步(闪避几率增加65%)两回合";
-        }
-        else if (id == 5)
-        {
-            cardName = "回春散";
-            cardInfo = "立即回复10点生命值，每回合开始回复10点生命值，持续2回合";
-        }
-        else if (id == 6)
-        {
-            cardName = "快斩";
-            cardInfo = "抽一张牌，对敌方造成(攻击力/2)的伤害，可额外攻击一次";
-        }
-        else if (id == 7)
-        {
-            cardName = "破釜沉舟";
-            cardInfo = "抽两张牌，获得20内力(生命值大于10%时无法使用)";
-        }
-        else if (id == 8)
-        {
-            cardName = "铁布衫";
-            cardInfo = "收到的伤害降低50%，持续2回合";
-        }
-        else if (id == 9)
-        {
-            cardName = "闷棍";
-            cardInfo = "对敌人造成(攻击力)伤害。使敌人眩晕，下回合无法攻击";
-        }
-        else if (id == 10)
-        {
-            cardName = "清心静气";
-            cardInfo = "本回合无法攻击。抽一张牌，回复10内力。下回合开始额外回复10内力，抽一张牌";
-        }
-        else if (id == 11)
-        {
-            cardName = "结阵";
-            cardInfo = "获得(友方数量*5)的护甲";
-        }
-        else if (id == 101)
-        {
-            cardName = "旋风斩";
-            cardInfo = "对所有敌人造成(当前攻击力)+10伤害";
-        }
-        else if (id == 201)
-        {
-            cardName = "魔教掌法";
-            cardInfo = "对敌人造成已（损失生命值 * 0.5，最小为5，最大为30）伤害";
-        }
-        else if (id == 202)
-        {
-            cardName = "嗜血掌法";
-            cardInfo = "对敌人造成（攻击力）伤害，回复造成的伤害";
-        }
-        else if (id == 203)
-        {
-            cardName = "魔教剑法";
-            cardInfo = "消耗当前20%生命值，对敌人造成（消耗生命值*2）伤害";
-        }
-        else if (id == 204)
-        {
-            cardName = "魔功护体";
-            cardInfo = "消耗当前50%生命值，免疫伤害1回合";
-        }
-        else if (id == 205)
-        {
-            cardName = "噬魂剑法";
-            cardInfo = "对敌人造成(攻击力)伤害，回复10内力";
-        }
-        else if (id ==206)
-        {
-            cardName = "庸医";
-            cardInfo = "当前回合治疗效果变为伤害";
+        csvController.GetInstance().loadFile(Application.dataPath + "/Resources", "卡牌集.csv");
+        int i = 1;
+        while(true){
+            string cardId = csvController.GetInstance().getString(i, 0);
+            if(cardId == id.ToString())
+            {
+                cardName = csvController.GetInstance().getString(i, 1);
+                cardInfo = csvController.GetInstance().getString(i, 2);
+                break;
+            }
+            i++;
         }
         nameText.text = cardName;
         desText.text = cardInfo;
@@ -294,12 +216,6 @@ public class Card : MonoBehaviour, IPointerDownHandler
 
     public void 江湖剑法()//普通剑法
     {
-        //   if (gameController.playerIsAtk == true)
-        //{
-        //      gameController.SetTips("本回合您已进行了攻击",new Color(255, 255, 255));
-        //      BackToHand();
-        //       return;
-        //  }
         if (player.mp < 1)
         {
             gameController.SetTips("您的内力值不足", new Color(255, 255, 255));
@@ -375,12 +291,6 @@ public class Card : MonoBehaviour, IPointerDownHandler
 
     public void 快斩()
     {
-        //if (gameController.playerIsAtk == true)
-        //{
-        //    gameController.SetTips("本回合您已进行了攻击", new Color(255, 255, 255));
-        //    BackToHand();
-        //    return;
-        //}
         if (player.mp < 2)
         {
             gameController.SetTips("您的内力值不足", new Color(255, 255, 255));
@@ -432,13 +342,6 @@ public class Card : MonoBehaviour, IPointerDownHandler
 
     public void 闷棍()
     {
-        //if (gameController.playerIsAtk == true)
-        //{
-        //    gameController.SetTips("本回合您已进行了攻击", new Color(255, 255, 255));
-        //    BackToHand();
-        //    return;
-        //}
-
         gameController.playerIsAtk = true;
         damage = player.atk;
         enemyArea.Hurt(damage);
@@ -474,13 +377,6 @@ public class Card : MonoBehaviour, IPointerDownHandler
 
     public void 旋风斩()
     {
-        //if (gameController.playerIsAtk == true)
-        //{
-        //    gameController.SetTips("本回合您已进行了攻击", new Color(255, 255, 255));
-        //    BackToHand();
-        //    return;
-        //}
-
         gameController.playerIsAtk = true;
         damage = player.atk + 10;
         enemyArea.AllHurt(damage);
@@ -494,12 +390,6 @@ public class Card : MonoBehaviour, IPointerDownHandler
 
     public void 魔教掌法()
     {
-        //if (gameController.playerIsAtk == true)
-        //{
-        //    gameController.SetTips("本回合您已进行了攻击", new Color(255, 255, 255));
-        //    BackToHand();
-        //    return;
-        //}
         gameController.playerIsAtk = true;
         damage = gameController.playerMaxHp - player.hp;
         if (damage < 5) damage = 5;
@@ -515,12 +405,6 @@ public class Card : MonoBehaviour, IPointerDownHandler
 
     public void 嗜血掌法()
     {
-        //if (gameController.playerIsAtk == true)
-        //{
-        //    gameController.SetTips("本回合您已进行了攻击", new Color(255, 255, 255));
-        //    BackToHand();
-        //    return;
-        //}
         gameController.playerIsAtk = true;
         damage = player.atk;
         enemyArea.Hurt(damage);
@@ -538,13 +422,6 @@ public class Card : MonoBehaviour, IPointerDownHandler
 
     public void 魔教剑法()
     {
-        //if (gameController.playerIsAtk == true)
-        //{
-        //    gameController.SetTips("本回合您已进行了攻击", new Color(255, 255, 255));
-        //    BackToHand();
-        //    return;
-        //}
-
         gameController.playerIsAtk = true;
         damage = (int)(player.hp * 0.4);
         player.SetHp(-damage / 2);
@@ -567,13 +444,6 @@ public class Card : MonoBehaviour, IPointerDownHandler
 
     public void 噬魂剑法()
     {
-        //if (gameController.playerIsAtk == true)
-        //{
-        //    gameController.SetTips("本回合您已进行了攻击", new Color(255, 255, 255));
-        //    BackToHand();
-        //    return;
-        //}
-
         gameController.playerIsAtk = true;
         damage = player.atk;
         enemyArea.Hurt(damage);
