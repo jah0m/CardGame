@@ -29,14 +29,15 @@ public class Card : MonoBehaviour, IPointerDownHandler
     private Transform playerTransform;
     Team team;
     Player player;
-
+    Canvas canvas;
     EnemyArea enemyArea;
 
     GameController gameController;
     private CardController cardController;
     private GameObject tempCard;
 
-    private int index;
+    public int index;
+    public int order;
 
     public UnityEvent rightClick;//右击事件
 
@@ -46,37 +47,43 @@ public class Card : MonoBehaviour, IPointerDownHandler
     public void  Enter()
     {
         if (gameController.isAdding) return; //如果正在抽牌则无法放大
-        transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
+        transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);
         if (choose == true) return;
-        GameObject.Find("cards").GetComponent<GridLayoutGroup>().enabled = false;
+        //GameObject.Find("cards").GetComponent<GridLayoutGroup>().enabled = false;
         index = transform.GetSiblingIndex();
-        transform.SetParent(tempCard.transform);
+        pos = transform.localPosition;
+        //transform.localPosition = new Vector3(pos.x + 10, pos.y, pos.y);
+        order = canvas.sortingOrder;
+        canvas.sortingOrder = 10;
+        //transform.SetParent(tempCard.transform);
     }
 
     public void Exit()
     {
         if (gameController.isAdding) return;
-        transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+        transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
         if (choose == true) return;
-        GameObject.Find("cards").GetComponent<GridLayoutGroup>().enabled = true;
-        transform.SetParent(cardController.transform);
-        transform.SetSiblingIndex(index);
+        canvas.sortingOrder = order;
+        //GameObject.Find("cards").GetComponent<GridLayoutGroup>().enabled = true;
+        //transform.SetParent(cardController.transform);
+        //transform.SetSiblingIndex(index);
     }
 
     public void Drag()
     {
         if (choose == true) return;
-        index = cardController.cardCount;
-        GameObject.Find("cards").GetComponent<GridLayoutGroup>().enabled = true;
+        //GameObject.Find("cards").GetComponent<GridLayoutGroup>().enabled = true;
         transform.position = Input.mousePosition;
+        transform.localEulerAngles = new Vector3(0, 0, 0);
         transform.SetParent(GameObject.Find("tempCard").transform);
+        cardController.SetPos();
 
     }
 
     public void Up()
     {
         if (choose == true) return;
-        GameObject.Find("cards").GetComponent<GridLayoutGroup>().enabled = true;
+        //GameObject.Find("cards").GetComponent<GridLayoutGroup>().enabled = true;
         Vector3 pos = transform.position;
         float pos_y = pos.y;
         float pos_x = pos.x;
@@ -90,13 +97,15 @@ public class Card : MonoBehaviour, IPointerDownHandler
         }else
         {
             transform.SetParent(GameObject.Find("cards").transform);
+            transform.SetSiblingIndex(index);
         }
-        
+        cardController.SetPos();
     }
 
     public void BackToHand()//回到手牌
     {
         transform.SetParent(GameObject.Find("cards").transform);
+        transform.SetSiblingIndex(index);
     }
 
     
@@ -120,6 +129,9 @@ public class Card : MonoBehaviour, IPointerDownHandler
 
         transform.GetComponent<Image>().color = new Color(255, 255, 255);
         tempCard = GameObject.Find("tempCard");
+        canvas = GetComponent<Canvas>();
+        order = canvas.sortingOrder;
+
     }
 
     public void OnPointerDown(PointerEventData eventData)//当鼠标被按下时

@@ -18,15 +18,16 @@ public class Story : MonoBehaviour
   
     Event talk;
 
-
-
-
+    GameController gameController;
+    CardController cardController;
     List<string> textList = new List<string>();
 
     void Start()
     {
         talk = talkObj.GetComponent<Event>();
         GetTxetFormFile(textFile);
+        gameController = GameObject.Find("gameController").GetComponent<GameController>();
+        cardController = GameObject.Find("cards").GetComponent<CardController>();
     }
 
     // Update is called once per frame
@@ -55,6 +56,14 @@ public class Story : MonoBehaviour
         {
             textList.Add(line);
         }
+    }
+
+    public void Skip()
+    {
+        cardController.deck.Add(2, 3);
+        cardController.deck.Add(1, 3);
+        gameObject.SetActive(false);
+        gameController.StartGame();//游戏开始
     }
 }
 
