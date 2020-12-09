@@ -51,7 +51,7 @@ public class Event : MonoBehaviour
         GetTxetFormFile();
         Invoke("ShowImage", 1.5f);
         anim = GetComponent<Animator>();
-        anim.SetTrigger("1");
+        anim.SetTrigger("open");
     }
 
     // Update is called once per frame
@@ -116,7 +116,7 @@ public class Event : MonoBehaviour
             textList.Add("\n");
         }
     }
-    void open()
+    void Open()
     {
         opening = false;
     }
