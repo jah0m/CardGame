@@ -228,7 +228,7 @@ public class EnemyArea : MonoBehaviour
         {
             if (isAtk != 1)
             {
-                enemy1.transform.localPosition = new Vector3(240f, -55f, 0f);
+                enemy1.transform.localPosition = new Vector3(100f, 0f, 0f);
             }
             
 
@@ -237,7 +237,7 @@ public class EnemyArea : MonoBehaviour
         {
             if (isAtk != 2)
             {
-                enemy2.transform.localPosition = new Vector3(320f, -55f, 0f);
+                enemy2.transform.localPosition = new Vector3(200f, 0f, 0f);
             }
             
         }
@@ -245,7 +245,7 @@ public class EnemyArea : MonoBehaviour
         {
             if (isAtk != 3)
             {
-                enemy3.transform.localPosition = new Vector3(400f, -55f, 0f);
+                enemy3.transform.localPosition = new Vector3(300f, 0f, 0f);
             }
             
         }

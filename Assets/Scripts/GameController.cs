@@ -211,7 +211,7 @@ public class GameController : MonoBehaviour
         team.AddDog("tm2", "队友2", 50, 8, new Color(255, 255, 255));
         //team.AddDog("tm1", "队友1", 50, 8, new Color(255, 255, 255));
 
-        enemyArea.AddDog("enemy1", "野狗", 10, 8, new Color(255, 255, 255));
+        enemyArea.AddDog("enemy3", "野狗", 10, 8, new Color(255, 255, 255));
         cardController.canMix = false;
         
     }
@@ -221,8 +221,8 @@ public class GameController : MonoBehaviour
         SetTips("第2关", new Color(0, 55, 255));
         cardController.deck = new Dictionary<int, int>(tempDeck);//将临时牌库的牌复制回牌库中。
         cardController.CheckDeckCount();
-        enemyArea.AddDog("enemy1", "野狗", 30, 8, new Color(255, 255, 255));
         enemyArea.AddDog("enemy2", "野狗", 30, 8, new Color(255, 255, 255));
+        enemyArea.AddDog("enemy3", "野狗", 30, 8, new Color(255, 255, 255));
         cardController.canMix = true;
     }
 

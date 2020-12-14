@@ -250,7 +250,7 @@ public class Team : MonoBehaviour
         {
             if (isAtk != 1)
             {
-                tm1.transform.localPosition = new Vector3(-240f, -55f, 0f);
+                tm1.transform.localPosition = new Vector3(-100f, 0f, 0f);
             }
 
 
@@ -259,7 +259,7 @@ public class Team : MonoBehaviour
         {
             if (isAtk != 2)
             {
-                tm2.transform.localPosition = new Vector3(-320f, -55f, 0f);
+                tm2.transform.localPosition = new Vector3(-200f, 0f, 0f);
             }
 
         }
@@ -267,7 +267,7 @@ public class Team : MonoBehaviour
         {
             if (isAtk != 3)
             {
-                tm3.transform.localPosition = new Vector3(-400f, -55f, 0f);
+                tm3.transform.localPosition = new Vector3(-300f, 0f, 0f);
             }
 
         }
