@@ -24,6 +24,7 @@ public class EnemyArea : MonoBehaviour
     public bool checkDie;
     GameController gameController;
     Player player;
+    CardController cardController;
 
     
 
@@ -34,6 +35,7 @@ public class EnemyArea : MonoBehaviour
         gameController = GameObject.Find("gameController").GetComponent<GameController>();
 
         chooseCard = chooseCard_.GetComponent<ChooseCard>();
+        cardController = GameObject.Find("cards").GetComponent<CardController>();
 
         checkDie = false;
         
@@ -74,6 +76,10 @@ public class EnemyArea : MonoBehaviour
         if(transform.childCount == 0)
         {
             checkDie = true;
+            foreach(Transform card in cardController.transform)
+            {
+                Destroy(card.gameObject);
+            }
             chooseCard.Choose();
         }
     }

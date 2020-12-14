@@ -7,7 +7,7 @@ using System.Linq;
 public class CardController : MonoBehaviour
 {
     public GameObject cardPrefab;//卡牌预制体
-    private int cardCount;//手牌数
+    public int cardCount;//手牌数
     
     private int id; //卡牌id
 
@@ -27,6 +27,7 @@ public class CardController : MonoBehaviour
     public GameObject deckObj;
 
     Player player;//玩家物体
+    
 
 
     void Start()
@@ -38,7 +39,7 @@ public class CardController : MonoBehaviour
 
     void Update()
     {
-
+        //SetPos();
     }
     public  void ClearCard()
     {
@@ -94,12 +95,14 @@ public class CardController : MonoBehaviour
         cardCount = transform.childCount;
         if (cardCount >= 7) return;
         GameObject card = Instantiate(cardPrefab);
+        card.GetComponent<Canvas>().sortingOrder = cardCount ;
         card.transform.SetParent(transform);
-        card.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+        card.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
         card.GetComponent<Card>().Init(id);
-        
+
         //MixCard();
         CheckDeckCount();
+        SetPos();
     }
 
     public void CheckDeckCount()//检查牌库数
@@ -182,5 +185,133 @@ public class CardController : MonoBehaviour
         isMixing = false;
     }
 
+    public void SetPos()
+    {
+        Dictionary<int, Transform> cards = new Dictionary<int, Transform>();
+        cardCount = transform.childCount;
+        if(cardCount == 1)
+        {
+            Transform card1 = transform.GetChild(0);
+            card1.localPosition = new Vector3(0, 0, 1);
+            card1.localEulerAngles = new Vector3(0, 0, 0);
+            card1.GetComponent<Canvas>().sortingOrder = 1;
+        }
+        else if(cardCount == 2)
+        {
+            Transform card1 = transform.GetChild(0);
+            Transform card2 = transform.GetChild(1);
+            
+            card1.localPosition = new Vector3(-50, 0, 1);
+            card1.localEulerAngles = new Vector3(0, 0, 3);
+            card1.GetComponent<Canvas>().sortingOrder = 1;
+            card2.localPosition = new Vector3(50, 0, 1);
+            card2.localEulerAngles = new Vector3(0, 0, -3);
+            card2.GetComponent<Canvas>().sortingOrder = 2;
+        }
+        else if(cardCount == 3)
+        {
+            Transform card1 = transform.GetChild(0);
+            Transform card2 = transform.GetChild(1);
+            Transform card3 = transform.GetChild(2);
+
+            cards.Add(1, card1);
+            cards.Add(2, card2);
+            cards.Add(3, card3);
+
+            foreach(int key in cards.Keys)
+            {
+                cards[key].localPosition = new Vector3( (key - 2) * 100, Mathf.Abs(key - 2) * -5, 1);
+                cards[key].localEulerAngles = new Vector3( 0, 0, (key - 2) * -5);
+                cards[key].GetComponent<Canvas>().sortingOrder = key;
+            }
+        }
+        else if(cardCount == 4)
+        {
+            Transform card1 = transform.GetChild(0);
+            Transform card2 = transform.GetChild(1);
+            Transform card3 = transform.GetChild(2);
+            Transform card4 = transform.GetChild(3);
+
+            cards.Add(1, card1);
+            cards.Add(2, card2);
+            cards.Add(3, card3);
+            cards.Add(4, card4);
+
+            foreach (int key in cards.Keys)
+            {
+                cards[key].localPosition = new Vector3((key - 2.5f) * 90, (int)Mathf.Abs(key - 2.5f) * -10, 1);
+                cards[key].localEulerAngles = new Vector3(0, 0, (key - 2.5f) * -5);
+                cards[key].GetComponent<Canvas>().sortingOrder = key;
+            }
+        }
+        else if (cardCount == 5)
+        {
+            Transform card1 = transform.GetChild(0);
+            Transform card2 = transform.GetChild(1);
+            Transform card3 = transform.GetChild(2);
+            Transform card4 = transform.GetChild(3);
+            Transform card5 = transform.GetChild(4);
+
+            cards.Add(1, card1);
+            cards.Add(2, card2);
+            cards.Add(3, card3);
+            cards.Add(4, card4);
+            cards.Add(5, card5);
+
+            foreach (int key in cards.Keys)
+            {
+                cards[key].localPosition = new Vector3((key - 3) * 80, Mathf.Abs((float)key - 3f) * -5, 1);
+                cards[key].localEulerAngles = new Vector3(0, 0, (key - 3) * -5);
+                cards[key].GetComponent<Canvas>().sortingOrder = key;
+            }
+            card1.localPosition = new Vector3(-160 , -16, 1);
+            card5.localPosition = new Vector3(160, -16, 1);
+        }
+        else if (cardCount == 6)
+        {
+            cards.Add(1, transform.GetChild(0));
+            cards.Add(2, transform.GetChild(1));
+            cards.Add(3, transform.GetChild(2));
+            cards.Add(4, transform.GetChild(3));
+            cards.Add(5, transform.GetChild(4));
+            cards.Add(6, transform.GetChild(5));
+
+            foreach (int key in cards.Keys)
+            {
+                if(Mathf.Abs(key - 3.5f) < 1)
+                {
+                    cards[key].localPosition = new Vector3((key - 3.5f) * 80, 0, 1);
+                }
+                else
+                {
+                    cards[key].localPosition = new Vector3((key - 3.5f) * 80, (int)Mathf.Abs((float)key - 3.5f) * -16 + 8, 1);
+                }
+                cards[key].localEulerAngles = new Vector3(0, 0, (key - 3.5f) * -5);
+                cards[key].GetComponent<Canvas>().sortingOrder = key;
+            }
+        }
+        else if (cardCount == 7)
+        {
+            cards.Add(1, transform.GetChild(0));
+            cards.Add(2, transform.GetChild(1));
+            cards.Add(3, transform.GetChild(2));
+            cards.Add(4, transform.GetChild(3));
+            cards.Add(5, transform.GetChild(4));
+            cards.Add(6, transform.GetChild(5));
+            cards.Add(7, transform.GetChild(6));
+
+            foreach (int key in cards.Keys)
+            {
+                cards[key].localPosition = new Vector3((key - 4) * 80, Mathf.Abs(key - 4) * -5, 1);
+                cards[key].localEulerAngles = new Vector3(0, 0, (key - 4) * -5);
+                cards[key].GetComponent<Canvas>().sortingOrder = key;
+            }
+            transform.GetChild(1).localPosition = new Vector3(-160, -18, 1);
+            transform.GetChild(5).localPosition = new Vector3(160, -18, 1);
+            transform.GetChild(0).localPosition = new Vector3(-240, -38, 1);
+            transform.GetChild(6).localPosition = new Vector3(240, -38, 1);
+
+        }
+    }
     
 }

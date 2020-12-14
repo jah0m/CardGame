@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.IO;
-public class story : MonoBehaviour
+public class Story : MonoBehaviour
 {
 
 
@@ -14,22 +14,20 @@ public class story : MonoBehaviour
     [Header("wenben")]
     public TextAsset textFile;
     public int index;
-    public GameObject Story;
     public GameObject talkObj;
   
     Event talk;
 
-
-
-
+    GameController gameController;
+    CardController cardController;
     List<string> textList = new List<string>();
 
     void Start()
     {
         talk = talkObj.GetComponent<Event>();
         GetTxetFormFile(textFile);
-
-
+        gameController = GameObject.Find("gameController").GetComponent<GameController>();
+        cardController = GameObject.Find("cards").GetComponent<CardController>();
     }
 
     // Update is called once per frame
@@ -43,12 +41,9 @@ public class story : MonoBehaviour
             }
             if ( Input.GetMouseButtonUp(0) && index == textList.Count)
             {
-
-           
-                Story.SetActive(false);
+                gameObject.SetActive(false);
                 talkObj.SetActive(true);
                 talk.Init(1);
-
             }
         }
     }
@@ -63,13 +58,13 @@ public class story : MonoBehaviour
         }
     }
 
-
-
-
-
-
-
-
+    public void Skip()
+    {
+        cardController.deck.Add(2, 3);
+        cardController.deck.Add(1, 3);
+        gameObject.SetActive(false);
+        gameController.StartGame();//游戏开始
+    }
 }
 
 
