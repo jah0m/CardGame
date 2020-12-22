@@ -90,6 +90,7 @@ public class Card : MonoBehaviour, IPointerDownHandler
         if(pos_y < 180 && pos_x > 1240)
         {
             Destroy(gameObject);
+            cardController.SetPos();
         }
         if (pos_y > 260)
         {
@@ -106,6 +107,7 @@ public class Card : MonoBehaviour, IPointerDownHandler
     {
         transform.SetParent(GameObject.Find("cards").transform);
         transform.SetSiblingIndex(index);
+        cardController.SetPos();
     }
 
     
@@ -156,6 +158,7 @@ public class Card : MonoBehaviour, IPointerDownHandler
             {
                 cardName = csvController.GetInstance().getString(i, 1);
                 cardInfo = csvController.GetInstance().getString(i, 2);
+                cost = int.Parse(csvController.GetInstance().getString(i, 3));
                 break;
             }
             i++;
@@ -175,27 +178,14 @@ public class Card : MonoBehaviour, IPointerDownHandler
             BackToHand();
             return;
         }
-        if (id == 1) 江湖剑法();
-        if (id == 2) 回春丹();
-        if (id == 3) 无中生有();
-        if (id == 4) 逍遥步();
-        if (id == 5) 回春散();
-        if (id == 6) 快斩();
-        if (id == 7) 破釜沉舟();
-        if (id == 8) 铁布衫();
-        if (id == 9) 闷棍();
-        if (id == 10) 清心静气();
-        if (id == 11) 结阵();
-
-        if (id == 201) 魔教掌法();
-        if (id == 202) 嗜血掌法();
-        if (id == 203) 魔教剑法();
-        if (id == 204) 魔功护体();
-        if (id == 205) 噬魂剑法();
-        if (id == 206) 庸医();
-
-
-        if (id == 101) 旋风斩();
+        if(player.mp < cost)
+        {
+            gameController.SetTips("您的内力值不足", new Color(255, 255, 255));
+            BackToHand();    //如果法力值不足就回到手牌，不触发牌
+            return;
+        }
+        player.SetMp(-cost);//消耗内力
+        Invoke(cardName, 0f);
     }
 
     /// <summary>
@@ -203,13 +193,6 @@ public class Card : MonoBehaviour, IPointerDownHandler
     /// </summary>
     public void 回春丹()///回春丹
     {
-        if (player.mp < 1)
-        {
-            gameController.SetTips("您的内力值不足", new Color(255, 255, 255));
-            BackToHand();    //如果法力值不足就回到手牌，不触发牌
-            return;
-        }
-        player.SetMp(-1);
         gameController.SetTips("回春丹", new Color(0, 255, 0));
         if (player.庸医)
         {
@@ -220,22 +203,11 @@ public class Card : MonoBehaviour, IPointerDownHandler
         {
             player.SetHp(player.atk);
         }
-        
-        //cardController.SlowAddCard();
-        
         Destroy(gameObject);
     }
 
     public void 江湖剑法()//普通剑法
     {
-        if (player.mp < 1)
-        {
-            gameController.SetTips("您的内力值不足", new Color(255, 255, 255));
-            BackToHand();    //如果法力值不足就回到手牌，不触发牌
-            return;
-        }
-        player.SetMp(-1);
-
         gameController.playerIsAtk = true;
         damage = player.atk;
         enemyArea.Hurt(damage);
@@ -255,16 +227,7 @@ public class Card : MonoBehaviour, IPointerDownHandler
     
     public void 无中生有()//无中生有
     {
-        if (player.mp < 2)
-        {
-            gameController.SetTips("您的内力值不足", new Color(255, 255, 255));
-            BackToHand();    //如果法力值不足就回到手牌，不触发牌
-            return;
-        }
-        player.SetMp(-2);
         gameController.SetTips("无中生有", new Color(255, 181, 0));
-        Invoke("AddCard", 0.5f);
-        Invoke("AddCard", 0.5f);
         cardController.SlowAddCard();
         cardController.SlowAddCard();
         Destroy(gameObject);
@@ -272,30 +235,13 @@ public class Card : MonoBehaviour, IPointerDownHandler
 
     public void 逍遥步()
     {
-        if (player.mp < 1)
-        {
-            gameController.SetTips("您的内力值不足", new Color(255, 255, 255));
-            BackToHand();    //如果法力值不足就回到手牌，不触发牌
-            return;
-        }
-        player.SetMp(-1);
         gameController.SetTips("逍遥步", new Color(0, 45, 255));
         player.SetBuff(1, 2);
-        //cardController.SlowAddCard();
         Destroy(gameObject);
-
     }
 
     public void 回春散()
     {
-        if (player.mp < 1)
-        {
-            gameController.SetTips("您的内力值不足", new Color(255, 255, 255));
-            BackToHand();    //如果法力值不足就回到手牌，不触发牌
-            return;
-        }
-        player.SetMp(-1);
-        //cardController.SlowAddCard();
         gameController.SetTips("回春散", new Color(0, 255, 0));
         player.SetBuff(2, 2);
         Destroy(gameObject);
@@ -303,20 +249,13 @@ public class Card : MonoBehaviour, IPointerDownHandler
 
     public void 快斩()
     {
-        if (player.mp < 2)
-        {
-            gameController.SetTips("您的内力值不足", new Color(255, 255, 255));
-            BackToHand();    //如果法力值不足就回到手牌，不触发牌
-            return;
-        }
-        player.SetMp(-2);
+        gameController.SetTips("快斩", new Color(255, 0, 0));
         damage = player.atk / 2;
         enemyArea.Hurt(damage);
         if (player.blood == true) //判断是否吸血
         {
             player.SetHp((int)(damage * 0.3));//吸血效果
         }
-        gameController.SetTips("快斩", new Color(255, 0, 0));
         cardController.SlowAddCard();
         Destroy(gameObject);
     }
@@ -334,22 +273,13 @@ public class Card : MonoBehaviour, IPointerDownHandler
         cardController.SlowAddCard();
         player.SetMp(20);
         Destroy(gameObject);
-
     }
 
     public void 铁布衫()
     {
-        if (player.mp < 1)
-        {
-            gameController.SetTips("您的内力值不足", new Color(255, 255, 255));
-            BackToHand();    //如果法力值不足就回到手牌，不触发牌
-            return;
-        }
-        player.SetMp(-1);
         gameController.SetTips("铁布衫", new Color(0, 255, 0));
         player.SetBuff(3, 2);
         Destroy(gameObject);
-
     }
 
     public void 闷棍()
@@ -374,7 +304,6 @@ public class Card : MonoBehaviour, IPointerDownHandler
             BackToHand();
             return;
         }
-
         gameController.playerIsAtk = true;
         gameController.SetTips("清心静气", new Color(0, 255, 0));
         player.SetBuff(4, 1);
