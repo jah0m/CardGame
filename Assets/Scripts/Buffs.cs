@@ -7,10 +7,11 @@ public class Buffs : MonoBehaviour
 {
     public GameObject buffPrefab;
     
-    public void AddBuff(int Id, int Type) //type: 1为玩家buff ，2为队友或敌人buff
+    public void AddBuff(int Id, int Type, int Round) //type: 1为玩家buff ，2为队友或敌人buff
     {
         GameObject buff = Instantiate(buffPrefab);
         buff.transform.SetParent(transform);
+        buff.transform.localScale = new Vector3(1f, 1f, 1f);
         if(Id == 1)
         {
             buff.transform.GetChild(0).GetComponent<Text>().text = "逍";
@@ -33,14 +34,14 @@ public class Buffs : MonoBehaviour
         }
         else if (Id == 201)
         {
-            buff.transform.GetChild(0).GetComponent<Text>().text = "晕";
+            buff.GetComponent<Image>().sprite = Resources.Load("buff/晕", typeof(Sprite)) as Sprite;
+            buff.transform.GetChild(1).GetComponent<Text>().text = Round.ToString();
         }
         else if(Id == 206)
         {
             buff.transform.GetChild(0).GetComponent<Text>().text = "庸";
         }
-        if (Type == 1) buff.transform.localScale = new Vector3(1f, 1f, 1f);
-        if (Type == 2) buff.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+
     }
     public void ClearAllBuff()
     {

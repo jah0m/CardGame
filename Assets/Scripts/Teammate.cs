@@ -9,10 +9,13 @@ public class Teammate : MonoBehaviour
 {
     private int hp;
     private int atk;
+    private int maxHp;
     public Text hpText;
     public Text buffText;
     public Text floatText;
     public Text name;
+    public Image hpBar;
+
 
     public GameObject buffsObj;
     Buffs buffsIcon;
@@ -24,6 +27,7 @@ public class Teammate : MonoBehaviour
     public Animator anim;
     EnemyArea enemyArea;
     Team team;
+    Vector3 pos;
 
 
     void Start()
@@ -38,6 +42,7 @@ public class Teammate : MonoBehaviour
 
     public void Init(int Hp, int Atk, string Name)
     {
+        maxHp = Hp;
         hp = Hp;
         atk = Atk;
         name.text = Name;
@@ -47,6 +52,7 @@ public class Teammate : MonoBehaviour
 
     public void ChangePos()
     {
+        anim.SetBool("Shining", true);
         team.ChangePos(gameObject, false);
     }
     public void SetHp(int num)
@@ -58,7 +64,8 @@ public class Teammate : MonoBehaviour
             anim.SetTrigger("Death");
             Destroy(gameObject, 1f);
         }
-        hpText.text = "生命" + hp;
+        hpText.text =  hp + "/" + maxHp;
+        hpBar.fillAmount = (float)hp / maxHp;
         if (num > 0)
         {
             SetFloat(1, num.ToString(), new Color(0, 255, 0));
@@ -102,6 +109,14 @@ public class Teammate : MonoBehaviour
             AttackOver();
             return;
         }
+        pos = transform.position;
+        GameObject target = enemyArea.GetFirst();
+        transform.position = new Vector3(target.transform.position.x - 80, pos.y, pos.z);
+        Invoke("AttackAni", 0.8f);
+    }
+    
+    private void AttackAni()
+    {
         anim.SetBool("Attack", true);
     }
 
@@ -144,7 +159,7 @@ public class Teammate : MonoBehaviour
                 if (buffs.ElementAt(i).Key == "眩晕")
                 {
                     diz = true;
-                    buffsIcon.AddBuff(201, 2);
+                    buffsIcon.AddBuff(201, 2, buffs[buffs.ElementAt(i).Key] );
                 }
             }
             else if (buffs[buffs.ElementAt(i).Key] == 0)//如果剩余回合为0则取消buff效果并移除buff

@@ -27,6 +27,9 @@ public class Team : MonoBehaviour
 
     private GameObject changePos1;
     private int playerChange;
+    private bool playerInPos1;
+
+    public GameObject guidesObj;
 
     void Start()
     {
@@ -34,6 +37,7 @@ public class Team : MonoBehaviour
         gameController = GameObject.Find("gameController").GetComponent<GameController>();
         enemyArea = GameObject.Find("enemyArea").GetComponent<EnemyArea>();
         changePos1 = null;
+        //guidesObj = GameObject.Find("guides");
     }
 
     void Update()
@@ -52,11 +56,34 @@ public class Team : MonoBehaviour
         if (gameController.isChangePos) return;
         if (changePos1 == null)
         {
+            if (isPlayer)
+            {
+                playerInPos1 = true;
+            }
+            else
+            {
+                playerInPos1 = false;
+            }
             playerChange = 1;
             changePos1 = obj;
+
         }
         else
         {
+            if (obj == changePos1)
+            {
+                if (isPlayer)
+                {
+                    obj.transform.GetChild(0).GetComponent<Animator>().SetBool("Shining", false);
+                }
+                else
+                {
+                    obj.GetComponent<Animator>().SetBool("Shining", false);
+                }
+                changePos1 = null;
+                playerChange = 0;
+                return;
+            }
             if (playerChange != 0 && !isPlayer)
             {
                 if (obj.name == "tm1") playerIn = 1;
@@ -70,10 +97,21 @@ public class Team : MonoBehaviour
                 if (changePos1.name == "tm2") playerIn = 2;
                 if (changePos1.name == "tm3") playerIn = 3;
             }
+            if (playerInPos1)
+            {
+                changePos1.transform.GetChild(0).GetComponent<Animator>().SetBool("Shining", false);
+                obj.GetComponent<Animator>().SetBool("Shining", false);
+            }
+            else
+            {
+                obj.transform.GetChild(0).GetComponent<Animator>().SetBool("Shining", false);
+                changePos1.GetComponent<Animator>().SetBool("Shining", false);
+            }
             string tempName = changePos1.name;
             changePos1.name = obj.name;
             obj.name = tempName;
             changePos1 = null;
+
         }
     }
     public void AddDog(string index, string Name, int Hp, int Atk, Color color)
@@ -86,6 +124,12 @@ public class Team : MonoBehaviour
         tm.name = index;
         tm.GetComponent<Teammate>().Init(Hp, Atk, Name);
         tm.GetComponent<Image>().color = color;
+
+        if (gameController.guideId == 6)//教程
+        {
+            guidesObj.SetActive(true);
+            guidesObj.GetComponent<Guide>().Init(6);
+        }
     }
 
     public void GetTm()
@@ -243,6 +287,14 @@ public class Team : MonoBehaviour
         if (tm3 && playerIn != 3) tm3.GetComponent<Teammate>().Hurt(num);
     }
 
+    public GameObject GetFirst() //获取第一个友方
+    {
+        GetTm();
+        if (tm1) return tm1;
+        else if (tm2) return tm2;
+        else if (tm3) return tm3;
+        else return null;
+    }
     public void SetPos()
     {
         GetTm();
@@ -250,7 +302,7 @@ public class Team : MonoBehaviour
         {
             if (isAtk != 1)
             {
-                tm1.transform.localPosition = new Vector3(-100f, 0f, 0f);
+                tm1.transform.localPosition = new Vector3(-100f, 5f, 0f);
             }
 
 
@@ -259,7 +311,7 @@ public class Team : MonoBehaviour
         {
             if (isAtk != 2)
             {
-                tm2.transform.localPosition = new Vector3(-200f, 0f, 0f);
+                tm2.transform.localPosition = new Vector3(-220f, 5f, 0f);
             }
 
         }
@@ -267,7 +319,7 @@ public class Team : MonoBehaviour
         {
             if (isAtk != 3)
             {
-                tm3.transform.localPosition = new Vector3(-300f, 0f, 0f);
+                tm3.transform.localPosition = new Vector3(-340f, 5f, 0f);
             }
 
         }

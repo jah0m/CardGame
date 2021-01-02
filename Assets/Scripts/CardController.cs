@@ -28,8 +28,6 @@ public class CardController : MonoBehaviour
 
     Player player;//玩家物体
     
-
-
     void Start()
     {
         handCardsCount.Add("普通剑法", 0);
@@ -67,6 +65,7 @@ public class CardController : MonoBehaviour
 
     public void AddCard(int Id) // 抽牌 规则，如果参数为0则随机抽牌吧并且消耗牌库内的牌，如果参数为卡牌id则抽取指定的牌，不消耗牌库内的牌
     {
+        if (gameController.gameOver) return;
         if (Id != 0) id = Id;
         else
         {

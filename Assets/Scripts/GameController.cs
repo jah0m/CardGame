@@ -20,7 +20,9 @@ public class GameController : MonoBehaviour
     public int 关卡;
     public int 抽卡数;
 
-    public Transform cards;
+    public bool gameOver = false;
+
+    //public Transform cards;
     CardController cardController;
 
     private Transform playerTransform;
@@ -50,11 +52,20 @@ public class GameController : MonoBehaviour
 
     public Dictionary<int, int> tempDeck = new Dictionary<int, int>(); //临时牌库，用于存储当前玩家的牌库
 
+    public Transform mainMenu;
+
+    public GameObject guides;
+
+    public bool guiding; //正在指导
+    public int guideId = 1;
+    public bool addCardLock;
+
+    
     void Start()
     {
         selectSkill = false;
-        playerAtk = 3;
-        playerMaxHp = 10;
+        playerAtk = 5;
+        playerMaxHp = 50;
         playerMaxMp = 3;
         playerMpReply = playerMaxMp;
 
@@ -70,7 +81,6 @@ public class GameController : MonoBehaviour
         tempCard = GameObject.Find("tempCard");
         
     }
-
     public void StartGame()
     {
        
@@ -87,27 +97,16 @@ public class GameController : MonoBehaviour
         SetTips("你的回合", new Color(255, 255, 255));
         if(player.level == 1)
         {
-            抽卡数 = 3;
+            抽卡数 = 2;
         }
         else
         {
-            抽卡数 = 4;
+            抽卡数 = 2;
         }
+        
         round += 1;
         enemyArea.checkDie = false;
-        if(round == 1)
-        {
-            count = 0;
-            times = 4;
-            InvokeRepeating("AddCard", 0.5f, 0.5f);
-        }
-        else
-        {
-            count = 0;
-            times = 抽卡数;
-            InvokeRepeating("AddCard", 0.5f, 0.5f);
-        }
-
+        
         player.UpdateBuff(); //每回合开始时刷新buff
         enemyArea.UpdateBuff();
         team.UpdateBuff();
@@ -116,6 +115,19 @@ public class GameController : MonoBehaviour
         turn = 1;
         
         player.SetMp(playerMpReply);
+        if (round == 1)
+        {
+            count = 0;
+            times = 3;
+            InvokeRepeating("AddCard", 0.5f, 0.5f);
+        }
+        else
+        {
+            if (addCardLock) return;
+            count = 0;
+            times = 抽卡数;
+            InvokeRepeating("AddCard", 0.5f, 0.5f);
+        }
     }
 
     private void AddCard()
@@ -179,6 +191,15 @@ public class GameController : MonoBehaviour
         
     }
 
+    public void Guide()
+    {
+        mainMenu.gameObject.SetActive(false);
+        cardController.deck.Add(1, 5);
+        cardController.deck.Add(2, 2);
+        selectSkill = true;
+        设定关卡(0);
+    }
+
     public void 设定关卡(int num)
     {
         关卡 = num;
@@ -189,6 +210,8 @@ public class GameController : MonoBehaviour
         cardController.ClearCard();
         SetTips("改变位置", new Color(255, 255, 255));
         isChangePos = false;
+        //Invoke("关卡" + 关卡, 0f);
+        if (关卡 == 0) 教程();
         if (关卡 == 1) 关卡1();
         if (关卡 == 2) 关卡2();
         if (关卡 == 3) 关卡3();
@@ -201,6 +224,20 @@ public class GameController : MonoBehaviour
     /// <summary>
     /// 关卡设定
     /// </summary>
+    /// 
+
+    public void 教程()
+    {
+        bg.GetComponent<Image>().sprite = Resources.Load("background/bg_1", typeof(Sprite)) as Sprite;
+        tempDeck = new Dictionary<int, int>(cardController.deck);//将当前的牌库保存到临时牌库
+        //team.AddDog("tm2", "队友2", 50, 8, new Color(255, 255, 255));
+
+        enemyArea.AddTj("enemy3", "铁匠阿牛", 50, 10);
+        cardController.canMix = false;
+        guides.SetActive(true);
+        guiding = true;
+    }
+
     public void 关卡1()
     {
         SetTips("第1关", new Color(0, 55, 255));
