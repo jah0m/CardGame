@@ -31,6 +31,7 @@ public class Card : MonoBehaviour, IPointerDownHandler
     Player player;
     Canvas canvas;
     EnemyArea enemyArea;
+    GameObject guidesObj;
 
     GameController gameController;
     private CardController cardController;
@@ -133,6 +134,7 @@ public class Card : MonoBehaviour, IPointerDownHandler
         tempCard = GameObject.Find("tempCard");
         canvas = GetComponent<Canvas>();
         order = canvas.sortingOrder;
+        guidesObj = GameObject.Find("guides");
 
     }
 
@@ -173,7 +175,7 @@ public class Card : MonoBehaviour, IPointerDownHandler
 
     public void UseCard()
     {
-        if (gameController.turn != 1 || cardController.isMixing == true)//如果不是玩家回合就无法用牌
+        if (gameController.turn != 1 || cardController.isMixing || player.attacking)//如果不是玩家回合就无法用牌
         {
             BackToHand();
             return;
@@ -209,6 +211,7 @@ public class Card : MonoBehaviour, IPointerDownHandler
     public void 江湖剑法()//普通剑法
     {
         gameController.playerIsAtk = true;
+        player.Attack();
         damage = player.atk;
         enemyArea.Hurt(damage);
         if (player.blood == true) //判断是否吸血
@@ -397,5 +400,9 @@ public class Card : MonoBehaviour, IPointerDownHandler
         Destroy(gameObject);
     }
 
-    
+    public void 阿黄()
+    {
+        team.AddDog("tm2", "阿黄", 20, 5, new Color(255, 255, 255));
+        Destroy(gameObject);
+    }
 }

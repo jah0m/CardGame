@@ -9,9 +9,12 @@ public class Enemy : MonoBehaviour
 {
     private int hp;
     private int atk;
+    private int maxHp;
     public Text hpText;
     public Text floatText;
     public Text buffText;
+    public Image hpBar;
+    
 
     Player player;
     Team team;
@@ -28,6 +31,8 @@ public class Enemy : MonoBehaviour
     public GameObject buffsObj;
     Buffs buffsIcon;
 
+    GameObject guidesObj;
+
     Vector3 pos;
 
     void Start()
@@ -39,7 +44,7 @@ public class Enemy : MonoBehaviour
         enemyArea = GameObject.Find("enemyArea").GetComponent<EnemyArea>();
         team = GameObject.Find("team").GetComponent<Team>();
         buffsIcon = buffsObj.GetComponent<Buffs>();
-
+        guidesObj = GameObject.Find("guides");
     }
     void Update()
     {
@@ -47,6 +52,7 @@ public class Enemy : MonoBehaviour
     }
     public void Init(int Hp, int Atk, string Name)
     {
+        maxHp = Hp;
         hp = Hp;
         atk = Atk;
         name.text = Name;
@@ -63,7 +69,8 @@ public class Enemy : MonoBehaviour
             anim.SetTrigger("Death");
             Destroy(gameObject, 1f);
         }
-        hpText.text = "生命" + hp;
+        hpText.text = hp + "/" + maxHp;
+        hpBar.fillAmount = (float)hp / maxHp;
         if (num > 0)
         {
             SetFloat(1, num.ToString(), new Color(0, 255, 0));
@@ -73,6 +80,11 @@ public class Enemy : MonoBehaviour
             SetFloat(1, num.ToString(), new Color(255, 0, 0));
         }
 
+        if(name.text == "铁匠阿牛" && num < 0 &&gameController.guideId == 2)
+        {
+            guidesObj.SetActive(true);
+            guidesObj.GetComponent<Guide>().Init(2);
+        }
     }
     public void SetFloat(int Type, string info, Color color)//type : 1伤害, 2buff
     {
@@ -104,17 +116,30 @@ public class Enemy : MonoBehaviour
 
     public void Attack()//攻击动画
     {
-        if (name.text == "铁匠阿牛" && hp <= 50 && isDog == false)
+        if (name.text == "铁匠阿牛" && hp <= 30 && isDog == false)
         {
             isDog = true;
-            enemyArea.AddDog("enemy1","阿黄1号", 50, 8, new Color(255, 255, 255));
-            enemyArea.AddDog("enemy2","阿黄2号", 50, 8, new Color(255, 255, 255));
+            enemyArea.AddDog("enemy1","阿黄1号", 10, 5, new Color(255, 255, 255));
+            enemyArea.AddDog("enemy2","阿黄2号", 10, 5, new Color(255, 255, 255));
+            guidesObj.SetActive(true);
+            guidesObj.GetComponent<Guide>().Init(7);
         }
         if (diz == true)//是否眩晕
         {
             AttackOver();
             return;
         }
+
+        pos = transform.localPosition;
+        Debug.Log("now" + pos);
+        GameObject target = team.GetFirst();
+        transform.localPosition = new Vector3(target.transform.localPosition.x + 80, pos.y, pos.z);//瞬移
+        Debug.Log("after" + transform.localPosition);
+        Invoke("AttackAni", 0.8f);
+    }
+
+    private void AttackAni()
+    {
         anim.SetBool("Attack", true);
     }
     private void Hit()//帧时间，命中时给予伤害
@@ -122,13 +147,23 @@ public class Enemy : MonoBehaviour
 
         team.SetBuff(201, 2);
         team.Hurt(atk);
-        
     }
 
     private void AttackOver()
     {
         anim.SetBool("Attack", false);
         enemyArea.isAtk = 0;
+        Invoke("BackToPos", 0.5f);
+    }
+
+    private void BackToPos()
+    {
+        transform.localPosition = pos;
+        Invoke("End1Attack", 0.5f);
+    }
+
+    private void End1Attack()
+    {
         enemyArea.End1Attack();
     }
 
@@ -157,10 +192,11 @@ public class Enemy : MonoBehaviour
         {
             if (buffs[buffs.ElementAt(i).Key] > 0)//如果剩余回合不为零则设置buff效果
             {
+                int round = buffs[buffs.ElementAt(i).Key];
                 if (buffs.ElementAt(i).Key == "眩晕")
                 {
                     diz = true;
-                    buffsIcon.AddBuff(201, 2);
+                    buffsIcon.AddBuff(201, 2, round);
                 }
             }
             else if (buffs[buffs.ElementAt(i).Key] == 0)//如果剩余回合为0则取消buff效果并移除buff

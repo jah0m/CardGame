@@ -19,15 +19,19 @@ public class Player : MonoBehaviour
     public Text mpText;
     public Text xpText;
     public Text floatText;
+    public Text atkText;
     
     public Text skillText;
 
-    private Image hpBar;
+    public Image hpBar;
     private Image mpBar;
     private Image xpBar;
     public  int level;
     public int xp;
     private int MaxXp;
+
+    public Transform fires;
+    public GameObject firePrefab;
 
     public int skillId;
 
@@ -47,6 +51,13 @@ public class Player : MonoBehaviour
     public float 减伤;
     Team team;
     public bool 庸医 = false;
+    Animator anim;
+    EnemyArea enemyArea;
+
+    Vector3 pos;
+    public GameObject guidesObj;
+
+    public bool attacking; //正在攻击
 
 
     void Start()
@@ -54,15 +65,17 @@ public class Player : MonoBehaviour
        
         gameController = GameObject.Find("gameController").GetComponent<GameController>();
         reborn = Comeback_.GetComponent<Reborn>();
-        hpBar = GameObject.Find("hpBar").GetComponent<Image>();
-        mpBar = GameObject.Find("mpBar").GetComponent<Image>();
+        //hpBar = GameObject.Find("hpBar").GetComponent<Image>();
+        //mpBar = GameObject.Find("mpBar").GetComponent<Image>();
         xpBar = GameObject.Find("xpBar").GetComponent<Image>();
         xpText = GameObject.Find("xp").GetComponent<Text>();
         team = GameObject.Find("team").GetComponent<Team>();
         buffsIcon = buffsObj.GetComponent<Buffs>();
 
         cardController = GameObject.Find("cards").GetComponent<CardController>();
-
+        anim = GetComponent<Animator>();
+        enemyArea = GameObject.Find("enemyArea").GetComponent<EnemyArea>();
+        //guidesObj = GameObject.Find("guides");
     }
     public void Init(int Hp, int Mp, int Atk)
     {
@@ -74,10 +87,12 @@ public class Player : MonoBehaviour
 
         SetHp(0);
         SetMp(0);
+        SetAtk(0);
     }
 
     public void ChangePos()
     {
+        anim.SetBool("Shining", true);
         team.ChangePos(transform.parent.gameObject, true);
     }
 
@@ -86,13 +101,16 @@ public class Player : MonoBehaviour
         hp += num;
         if (hp > gameController.playerMaxHp) hp = gameController.playerMaxHp;
         hpText.text = hp + "/" + gameController.playerMaxHp;
-        hpBar.fillAmount = (float)hp / gameController.playerMaxHp;
+        hpBar.fillAmount = (float)hp / gameController.playerMaxHp * 0.846f + 0.164f;
         if(hp<=0)
         {
+            gameController.gameOver = true;
+            foreach (Transform card in cardController.transform)
+            {
+                Destroy(card.gameObject);
+            }
             reborn.back();
-
         }
-
 
         if (num > 0)
         {
@@ -102,7 +120,17 @@ public class Player : MonoBehaviour
         {
             SetFloat(num.ToString(), new Color(255, 0, 0));
         }
-        
+        if(num < 0 && gameController.guideId == 3)
+        {
+            guidesObj.SetActive(true);
+            guidesObj.GetComponent<Guide>().Init(3);
+        }
+        if (num > 0 && gameController.guideId == 4)
+        {
+            guidesObj.SetActive(true);
+            guidesObj.GetComponent<Guide>().Init(4);
+        }
+
     }
     public void SetXp(int num)
     {
@@ -116,22 +144,38 @@ public class Player : MonoBehaviour
         {
             MaxXp = 10;
         }
-        xpText.text = "经验值:" + xp + "/" + MaxXp;
+        //xpText.text = "经验值:" + xp + "/" + MaxXp;
         if (level == 3)
         {
             xpText.text =  "MAX";
         }
-        xpBar.fillAmount = (float)xp / MaxXp;
+        //xpBar.fillAmount = (float)xp / MaxXp;
         UpdateMp();
      
+    }
+
+    public void SetAtk(int num)
+    {
+        atk += num;
+        atkText.text = atk.ToString();
     }
 
     public void SetMp(int num)
     {
         mp += num;
         if (mp > gameController.playerMaxMp) mp = gameController.playerMaxMp;
-        mpText.text = mp + "/" + gameController.playerMaxMp;
-        mpBar.fillAmount = (float)mp / gameController.playerMaxMp;
+        foreach(Transform fire in fires)
+        {
+            Destroy(fire.gameObject);
+        }
+        for(int i = 0; i < mp; i++)
+        {
+            GameObject fire = Instantiate(firePrefab);
+            fire.transform.SetParent(fires);
+            fire.transform.localScale = new Vector3(1f, 1f, 1f);
+        }
+        //mpText.text = mp + "/" + gameController.playerMaxMp;
+        //mpBar.fillAmount = (float)mp / gameController.playerMaxMp;
 
     }
     public void UpdateMp()
@@ -233,42 +277,43 @@ public class Player : MonoBehaviour
         {
             if (buffs[buffs.ElementAt(i).Key] > 0)//如果剩余回合不为零则设置buff效果
             {
+                int round = buffs[buffs.ElementAt(i).Key];
                 if (buffs.ElementAt(i).Key == "逍遥步")
                 {
 
                     missRate = 65;
-                    buffsIcon.AddBuff(1, 1);
+                    buffsIcon.AddBuff(1, 1, round);
                 }
                 else if (buffs.ElementAt(i).Key == "回春散")
                 {
 
                     SetHp(10);
-                    buffsIcon.AddBuff(2, 1);
+                    buffsIcon.AddBuff(2, 1, round);
                 }
                 else if (buffs.ElementAt(i).Key == "铁布衫")
                 {
 
                     减伤 = 0.5f;
-                    buffsIcon.AddBuff(3, 1);
+                    buffsIcon.AddBuff(3, 1, round);
                 }
                 else if (buffs.ElementAt(i).Key == "清心静气")
                 {
 
                     SetMp(10);
                     cardController.SlowAddCard();
-                    buffsIcon.AddBuff(4, 1);
+                    buffsIcon.AddBuff(4, 1, round);
                 }
                 else if (buffs.ElementAt(i).Key == "魔功护体")
                 {
 
                     减伤 = 1f;
-                    buffsIcon.AddBuff(5, 1);
+                    buffsIcon.AddBuff(5, 1, round);
                 }
                 else if (buffs.ElementAt(i).Key == "庸医")
                 {
 
                     庸医 = true;
-                    buffsIcon.AddBuff(206, 1);
+                    buffsIcon.AddBuff(206, 1, round);
                 }
             }
             else if (buffs[buffs.ElementAt(i).Key] == 0)//如果剩余回合为0则取消buff效果并移除buff
@@ -386,10 +431,26 @@ public class Player : MonoBehaviour
             SetHp(-costHp);
             cardController.SlowAddCard();
         }
-
     }
 
+    public void Attack()
+    {
+        pos = transform.position;
+        GameObject target = enemyArea.GetFirst();
+        transform.position = new Vector3(target.transform.position.x - 80, pos.y, pos.z);
+        attacking = true;
+        Invoke("AttackAni", 0.3f);
+    }
+    
+    void AttackAni()
+    {
+        anim.SetTrigger("Attack");
+    }
 
-
-
+    public void BackToPos()
+    {
+        Debug.Log("back");
+        transform.position = pos;
+        attacking = false;
+    }
 }

@@ -7,6 +7,7 @@ public class EnemyArea : MonoBehaviour
 {
     public GameObject tjPrefab;
     public GameObject dogPrefab;
+    public GameObject shanzinvPrefab;
     public int enemyCount;
 
     private GameObject enemy1;
@@ -50,7 +51,21 @@ public class EnemyArea : MonoBehaviour
         enemy.transform.localScale = new Vector3(1f, 1f, 1f);
         enemy.name = index;
         enemy.GetComponent<Enemy>().Init(Hp, Atk, Name);
+        SetPos();
     }
+
+    public void AddSzn(string index, string Name, int Hp, int Atk)
+    {
+        enemyCount = transform.childCount;
+        if (enemyCount >= 3) return;
+        GameObject enemy = Instantiate(shanzinvPrefab);
+        enemy.transform.SetParent(transform);
+        enemy.transform.localScale = new Vector3(1f, 1f, 1f);
+        enemy.name = index;
+        enemy.GetComponent<Enemy>().Init(Hp, Atk, Name);
+        SetPos();
+    }
+
     public void AddDog(string index, string Name,int Hp,int Atk, Color color)
     {
         enemyCount = transform.childCount;
@@ -61,11 +76,12 @@ public class EnemyArea : MonoBehaviour
         enemy.name = index;
         enemy.GetComponent<Enemy>().Init(Hp, Atk, Name);
         enemy.GetComponent<Image>().color = color;
+        SetPos();
     }
 
     void Update()
     {
-        SetPos();
+        //SetPos();
         CheckDie();
         
     }
@@ -218,7 +234,16 @@ public class EnemyArea : MonoBehaviour
         enemy2 = GameObject.Find("enemy2");
         enemy3 = GameObject.Find("enemy3");
     }
-    
+
+    public GameObject GetFirst() //获取第一个敌人
+    {
+        GetEnemy();
+        if (enemy1) return enemy1;
+        else if (enemy2) return enemy2;
+        else if (enemy3) return enemy3;
+        else return null;
+    }
+
 
 
     public void SetPos()
@@ -228,7 +253,7 @@ public class EnemyArea : MonoBehaviour
         {
             if (isAtk != 1)
             {
-                enemy1.transform.localPosition = new Vector3(100f, 0f, 0f);
+                enemy1.transform.localPosition = new Vector3(100f, 5f, 0f);
             }
             
 
@@ -237,7 +262,7 @@ public class EnemyArea : MonoBehaviour
         {
             if (isAtk != 2)
             {
-                enemy2.transform.localPosition = new Vector3(200f, 0f, 0f);
+                enemy2.transform.localPosition = new Vector3(220f, 5f, 0f);
             }
             
         }
@@ -245,7 +270,7 @@ public class EnemyArea : MonoBehaviour
         {
             if (isAtk != 3)
             {
-                enemy3.transform.localPosition = new Vector3(300f, 0f, 0f);
+                enemy3.transform.localPosition = new Vector3(340f, 5f, 0f);
             }
             
         }
